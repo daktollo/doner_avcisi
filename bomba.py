@@ -25,6 +25,12 @@ class BombaYonetici:
         for bomba_nesnesi in self.bombalar:
             self.ekran.blit(bomba_nesnesi.bomba, (bomba_nesnesi.x, bomba_nesnesi.y))
 
+    def dolu_mu(self, yeni_bomba):
+        for bomba in self.bombalar:
+            if bomba.x == yeni_bomba.x and bomba.y == yeni_bomba.y:
+                return True
+        return False
+
 if __name__ == "__main__":
     bomba_yonetici = BombaYonetici()
     bomba_yonetici.bombalari_olustur()

@@ -11,19 +11,21 @@ class Bomba:
         self.y = hucre_sec()
 
 class BombaYonetici:
-    def __init__(self, ekran):
+    def __init__(self):
         self.bombalar = []
-        self.ekran = ekran
         self.bombalari_olustur()
 
     def bombalari_olustur(self):
-        for i in range(BOMBA_SAYISI):
+        sayac = 0
+        while sayac < BOMBA_SAYISI:
             bomba = Bomba()
-            self.bombalar.append(bomba)
+            if not self.dolu_mu(bomba):
+                self.bombalar.append(bomba)
+                sayac += 1
 
-    def bombalari_ciz(self):
+    def bombalari_ciz(self, ekran):
         for bomba_nesnesi in self.bombalar:
-            self.ekran.blit(bomba_nesnesi.bomba, (bomba_nesnesi.x, bomba_nesnesi.y))
+            ekran.blit(bomba_nesnesi.bomba, (bomba_nesnesi.x, bomba_nesnesi.y))
 
     def dolu_mu(self, yeni_bomba):
         for bomba in self.bombalar:

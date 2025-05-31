@@ -1,22 +1,13 @@
 import pygame
 from ayarlar import *
-from utils import hucre_sec
 from bomba import BombaYonetici
-from robot import Robot
+from ortam import OyunAlani
 
 pygame.init()
-clock = pygame.time.Clock()
 
-ekran = pygame.display.set_mode((EKRAN_GENISLIGI, EKRAN_YUKSEKLIGI))
+env = OyunAlani()
+env.reset()
 
-robot = Robot()
-
-kebab_resimi = pygame.image.load("resimler/kebab.png")
-kebab_resimi = pygame.transform.scale(kebab_resimi, (HUCRE_GENISLIGI, HUCRE_GENISLIGI))
-kebab_x = hucre_sec()
-kebab_y = hucre_sec()
-
-bomba_yonetici = BombaYonetici()
 oyun_devam = True
 
 while oyun_devam:
@@ -27,36 +18,23 @@ while oyun_devam:
         if olay.type == pygame.KEYDOWN:
 
             if olay.key == pygame.K_UP:
-                if not robot.y - robot.hiz < 0:
-                    robot.y -= robot.hiz
+                if not env.robot.y - env.robot.hiz < 0:
+                    env.robot.y -= env.robot.hiz
 
             if olay.key == pygame.K_DOWN:
-                if not robot.y + robot.hiz >= EKRAN_YUKSEKLIGI:
-                    robot.y += robot.hiz
+                if not env.robot.y + env.robot.hiz >= EKRAN_YUKSEKLIGI:
+                    env.robot.y += env.robot.hiz
 
             if olay.key == pygame.K_RIGHT:
-                if not robot.x + robot.hiz >= EKRAN_GENISLIGI:
-                    robot.x += robot.hiz
+                if not env.robot.x + env.robot.hiz >= EKRAN_GENISLIGI:
+                    env.robot.x += env.robot.hiz
 
             if olay.key == pygame.K_LEFT:
-                if not robot.x - robot.hiz < 0:
-                    robot.x -= robot.hiz
-
-    ekran.fill((255, 255, 255))
-    for i in range(0, EKRAN_GENISLIGI, HUCRE_GENISLIGI):
-        pygame.draw.line(ekran, (0, 0, 0), (i, 0), (i, EKRAN_YUKSEKLIGI))
-
-    for i in range(0, EKRAN_YUKSEKLIGI, HUCRE_GENISLIGI):
-        pygame.draw.line(ekran, (0, 0, 0), (0, i), (EKRAN_GENISLIGI, i))
+                if not env.robot.x - env.robot.hiz < 0:
+                    env.robot.x -= env.robot.hiz
+                    
+    env.render()
 
 
-    ekran.blit(robot.resim, (robot.x, robot.y))
-    ekran.blit(kebab_resimi, (kebab_x, kebab_y))
-    bomba_yonetici.bombalari_ciz(ekran)
-
-    
-    
-    pygame.display.flip()
-    clock.tick(OYUN_HIZI)
 
 pygame.quit()

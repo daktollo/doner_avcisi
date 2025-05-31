@@ -10,3 +10,6 @@ class Robot:
 
         self.resim = pygame.image.load("resimler/robot.png")
         self.resim = pygame.transform.scale(self.resim, (HUCRE_GENISLIGI, HUCRE_GENISLIGI))
+
+    def ciz(self, ekran):
+        ekran.blit(self.resim, (self.x, self.y))

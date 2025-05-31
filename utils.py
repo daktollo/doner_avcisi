@@ -6,12 +6,11 @@ def hucre_sec():
     return hucre*HUCRE_GENISLIGI
 
 
-
 def hucre_dolu_mu(yeni_nesne, nesneler):
-    yeni_nesne.x
-
-def dolu_mu(self, yeni_bomba):
-    for bomba in self.bombalar:
-        if bomba.x == yeni_bomba.x and bomba.y == yeni_bomba.y:
+    for nesne in nesneler:
+        if nesne.x == yeni_nesne.x and nesne.y == yeni_nesne.y:
             return True
+    
     return False
+
+

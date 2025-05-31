@@ -29,6 +29,21 @@ class OyunAlani:
     def reset(self):
         self.robot, self.kebab, self.bomba_yonetici  = yerlestir()
 
+    def get_obs(self):
+        obs = [0,0,0,0,0,0,0,0]
+
+        for bomba in self.bomba_yonetici.bombalar:
+            if self.robot.x + HUCRE_GENISLIGI == bomba.x and self.robot.y == bomba.y:
+                obs[2] = 1
+            if self.robot.x - HUCRE_GENISLIGI == bomba.x and self.robot.y == bomba.y:
+                obs[3] = 1
+            if self.robot.x == bomba.x and self.robot.y + HUCRE_GENISLIGI == bomba.y:
+                obs[1] = 1
+            if self.robot.x == bomba.x and self.robot.y - HUCRE_GENISLIGI == bomba.y:
+                obs[0] = 1
+
+        return obs
+
     
     def render(self):
         self.ekran.fill((255, 255, 255))

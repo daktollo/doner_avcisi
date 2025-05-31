@@ -34,6 +34,7 @@ while oyun_devam:
                     env.robot.x -= env.robot.hiz
                     
     env.render()
+    print(env.get_obs())
 
 
 

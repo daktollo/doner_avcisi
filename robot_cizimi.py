@@ -11,6 +11,8 @@ env.reset()
 oyun_devam = True
 
 while oyun_devam:
+    aksiyon = [0,0,0,0] # yukari, asagi, sag, sol
+
     for olay in pygame.event.get():
         if olay.type == pygame.QUIT:
             oyun_devam = False
@@ -18,24 +20,21 @@ while oyun_devam:
         if olay.type == pygame.KEYDOWN:
 
             if olay.key == pygame.K_UP:
-                if not env.robot.y - env.robot.hiz < 0:
-                    env.robot.y -= env.robot.hiz
+                aksiyon[0] = 1
 
             if olay.key == pygame.K_DOWN:
-                if not env.robot.y + env.robot.hiz >= EKRAN_YUKSEKLIGI:
-                    env.robot.y += env.robot.hiz
+                aksiyon[1] = 1
 
             if olay.key == pygame.K_RIGHT:
-                if not env.robot.x + env.robot.hiz >= EKRAN_GENISLIGI:
-                    env.robot.x += env.robot.hiz
+                aksiyon[2] = 1
 
             if olay.key == pygame.K_LEFT:
-                if not env.robot.x - env.robot.hiz < 0:
-                    env.robot.x -= env.robot.hiz
+                aksiyon[3] = 1
                     
+    yeni_durum, odul, bitti = env.adim(aksiyon)
+    print(yeni_durum, odul, bitti)
+    if bitti:
+        env.reset()
     env.render()
-    print(env.get_obs())
-
-
 
 pygame.quit()

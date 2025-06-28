@@ -21,13 +21,15 @@ def yerlestir():
 
 class OyunAlani:
 
-    def __init__(self):
-        self.clock = pygame.time.Clock()
-        self.ekran = pygame.display.set_mode((EKRAN_GENISLIGI, EKRAN_YUKSEKLIGI))
+    def __init__(self, ui=False):
+        if ui:
+            self.clock = pygame.time.Clock()
+            self.ekran = pygame.display.set_mode((EKRAN_GENISLIGI, EKRAN_YUKSEKLIGI))
 
 
     def reset(self):
         self.robot, self.kebab, self.bomba_yonetici  = yerlestir()
+        return self.get_obs()
 
     def _tehlike_konumu(self, obs):
         for bomba in self.bomba_yonetici.bombalar:

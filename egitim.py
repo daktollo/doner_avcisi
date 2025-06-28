@@ -6,7 +6,7 @@ from q_learning import QAjani
 import time
 
 ui = True
-eps = 20
+eps = 100
 max_adim = 20
 
 if ui:

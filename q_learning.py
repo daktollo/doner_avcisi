@@ -7,21 +7,37 @@ class QAjani:
         Q-değerini alır.
         Eğer Q-değeri yoksa, 0 döner.
         """
-        pass
-    
+        durum = tuple(durum)
+        aksiyon = tuple(aksiyon)
+        return self.q_table.get((durum, aksiyon), 0)
+
     def guncelle_q_degeri(self, durum, aksiyon, alinan_odul, yeni_durum=None):
         """        Q-değerini günceller.
         """
-        durum = tuple(durum)  # Durumu tuple'a çevir
-        aksiyon = tuple(aksiyon)  # Aksiyonu tuple'a çe
-        self.q_table[(durum, aksiyon)] = alinan_odul
+        durum = tuple(durum) # [0, 0, 0, 0, 0, 0, 0, 0] -> (0, 0, 0, 0, 0, 0, 0, 0) d
+        aksiyon = tuple(aksiyon) # [0, 0, 0, 0] -> (0, 0, 0, 0) a
+        self.q_table[(durum, aksiyon)] = alinan_odul # (d,a) : p
 
 
     def aksiyon_sec(self, durum):
         """
         Duruma göre en iyi aksiyonu seçer.
         """
-        return [0,0,0,1]  # Örnek olarak, sadece sol aksiyonu seçiyor [yukari, asagi, sag, sol]
+        max_aksiyon = None
+        max_odul = None
+        for i in range(4):
+            aksiyon = [0, 0, 0, 0]
+            aksiyon[i] = 1  # i. ak siyonu seç
+            odul = self.q_degerini_al(durum, aksiyon)  # yukari
+            if max_aksiyon is None:
+                max_aksiyon = aksiyon
+                max_odul = odul
+
+            elif odul > max_odul:
+                max_aksiyon = aksiyon
+                max_odul = odul
+
+        return max_aksiyon
     
 
 

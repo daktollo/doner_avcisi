@@ -6,8 +6,8 @@ from q_learning import QAjani
 import time
 from torch.utils.tensorboard import SummaryWriter
 
-ui = True
-eps = 1000
+ui = False
+eps = 10000
 max_adim = 50
 
 if ui:
@@ -31,7 +31,7 @@ for i in range(eps):
 
         aksiyon = q_ajani.aksiyon_sec(obs)
         yeni_durum, alinan_odul, oyun_bitti = env.adim(aksiyon)
-        q_ajani.guncelle_q_degeri(obs, aksiyon, alinan_odul)
+        q_ajani.guncelle_q_degeri(obs, aksiyon, alinan_odul, yeni_durum)
         toplam_reward += alinan_odul
         if oyun_bitti:
             break

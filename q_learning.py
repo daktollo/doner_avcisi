@@ -1,3 +1,5 @@
+import pickle
+
 class QAjani:
     def __init__(self):
         self.q_table = {}
@@ -39,6 +41,16 @@ class QAjani:
 
         return max_aksiyon
     
+    def kayit(self):
+        with open("son_tablo.pkl", "wb") as dosya:
+            pickle.dump(self.q_table, dosya)
+
+    def okuma():
+        with open("son_tablo.pkl", "rb") as dosya:
+            q_table = pickle.load(dosya)
+        
+        return q_table
+        
 
 
 

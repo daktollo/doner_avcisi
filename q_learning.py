@@ -1,15 +1,17 @@
 class QAjani:
-    def __init__(self, alpha=0.1, gamma=0.9):
+    def __init__(self, alpha=0.1, gamma=0.9, epsilon=0.1):
         """
         Q-Learning ajanı
         
         Args:
             alpha (float): Öğrenme oranı (learning rate) - 0.1 varsayılan
             gamma (float): İndirim faktörü (discount factor) - 0.9 varsayılan
+            epsilon (float): Keşif oranı (exploration rate) - 0.1 varsayılan
         """
         self.q_table = {}
         self.alpha = alpha  # Öğrenme oranı
         self.gamma = gamma  # İndirim faktörü
+        self.epsilon = epsilon  # Keşif oranı
 
     def q_degerini_al(self, durum, aksiyon):
         """
@@ -77,20 +79,52 @@ class QAjani:
 
     def aksiyon_sec(self, durum):
         """
-        Duruma göre en iyi aksiyonu seçer.
+        Epsilon-greedy stratejisi ile aksiyon seçer.
+        
+        - Epsilon olasılıkla rastgele aksiyon seçer (exploration)
+        - (1-epsilon) olasılıkla en iyi aksiyonu seçer (exploitation)
         """
-        max_aksiyon = None
-        max_odul = None
-        for i in range(4):
+        import random
+        
+        # Epsilon olasılıkla rastgele keşif yap
+        if random.random() < self.epsilon:
+            # Rastgele aksiyon seç (exploration)
+            rastgele_aksiyon_index = random.randint(0, 3)
             aksiyon = [0, 0, 0, 0]
-            aksiyon[i] = 1  # i. ak siyonu seç
-            odul = self.q_degerini_al(durum, aksiyon)  # yukari
-            if max_aksiyon is None:
-                max_aksiyon = aksiyon
-                max_odul = odul
-
-            elif odul > max_odul:
-                max_aksiyon = aksiyon
-                max_odul = odul
-
-        return max_aksiyon
+            aksiyon[rastgele_aksiyon_index] = 1
+            return aksiyon
+        else:
+            # En iyi aksiyonu seç (exploitation)
+            max_aksiyon = None
+            max_odul = None
+            for i in range(4):
+                aksiyon = [0, 0, 0, 0]
+                aksiyon[i] = 1  # i. aksiyonu seç
+                odul = self.q_degerini_al(durum, aksiyon)
+                if max_aksiyon is None:
+                    max_aksiyon = aksiyon
+                    max_odul = odul
+                elif odul > max_odul:
+                    max_aksiyon = aksiyon
+                    max_odul = odul
+            
+            return max_aksiyon
+    
+    def epsilon_azalt(self, min_epsilon=0.01, azalma_orani=0.995):
+        """
+        Epsilon değerini zamanla azaltır.
+        
+        Başlangıçta daha çok keşif, sonra daha çok sömürü yapar.
+        
+        Args:
+            min_epsilon (float): Minimum epsilon değeri
+            azalma_orani (float): Epsilon azalma oranı (0.995 = %0.5 azalma)
+        """
+        if self.epsilon > min_epsilon:
+            self.epsilon *= azalma_orani
+    
+    def epsilon_degerini_al(self):
+        """
+        Mevcut epsilon değerini döner.
+        """
+        return self.epsilon

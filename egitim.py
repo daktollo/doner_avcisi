@@ -4,17 +4,28 @@ from bomba import BombaYonetici
 from ortam import OyunAlani
 from q_learning import QAjani
 import time
+import pickle
+import os
 from torch.utils.tensorboard import SummaryWriter
 
 ui = False
 eps = 10000
 max_adim = 50
 
+q_kayit_periyodu = 1000  # Q-tablosunu her 1000 episode'da bir kaydet
+
+
+# Q-tablosu kaydetme klasörünü oluştur
+q_table_klasor = "q_tables"
+log_klasor = "logs"
+if not os.path.exists(q_table_klasor):
+    os.makedirs(q_table_klasor)
+
 if ui:
     pygame.init()
 
 # TensorBoard writer'ı oluştur
-writer = SummaryWriter('runs/q_learning')
+writer = SummaryWriter(log_klasor)
 
 env = OyunAlani(ui)
 q_ajani = QAjani()
@@ -47,6 +58,15 @@ for i in range(eps):
     if (i + 1) % 10 == 0:
         ortalama_reward = sum(reward_listesi[-10:]) / 10
         writer.add_scalar('Ortalama_Reward', ortalama_reward, i)
+
+    # Her 1000 episode'da bir Q-tablosunu kaydet
+    if (i + 1) % q_kayit_periyodu == 0:
+        q_table_dosya = os.path.join(q_table_klasor, f"q_table_epoch_{i+1}.pkl")
+        q_ajani.q_table_kaydet(q_table_dosya)
+
+# Son Q-tablosunu da kaydet
+final_q_table_dosya = os.path.join(q_table_klasor, "q_table_final.pkl")
+q_ajani.q_table_kaydet(final_q_table_dosya)
 
 # Writer'ı kapat
 writer.close()

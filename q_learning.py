@@ -1,3 +1,6 @@
+import pickle
+import os
+
 class QAjani:
     def __init__(self, alpha=0.1, gamma=0.9, epsilon=0.1):
         """
@@ -12,6 +15,42 @@ class QAjani:
         self.alpha = alpha  # Öğrenme oranı
         self.gamma = gamma  # İndirim faktörü
         self.epsilon = epsilon  # Keşif oranı
+
+    def q_table_yukle(self, dosya_yolu):
+        """
+        Kaydedilmiş Q-tablosunu yükler.
+        
+        Args:
+            dosya_yolu (str): Q-tablosu dosyasının yolu
+        """
+        try:
+            with open(dosya_yolu, 'rb') as f:
+                self.q_table = pickle.load(f)
+            print(f"Q-tablosu başarıyla yüklendi: {dosya_yolu}")
+            print(f"Yüklenen Q-tablosu boyutu: {len(self.q_table)}")
+        except FileNotFoundError:
+            print(f"Dosya bulunamadı: {dosya_yolu}")
+        except Exception as e:
+            print(f"Q-tablosu yüklenirken hata oluştu: {e}")
+
+    def q_table_kaydet(self, dosya_yolu):
+        """
+        Q-tablosunu kaydeder.
+        
+        Args:
+            dosya_yolu (str): Q-tablosunun kaydedileceği dosya yolu
+        """
+        try:
+            # Klasör yoksa oluştur
+            klasor = os.path.dirname(dosya_yolu)
+            if klasor and not os.path.exists(klasor):
+                os.makedirs(klasor)
+            
+            with open(dosya_yolu, 'wb') as f:
+                pickle.dump(self.q_table, f)
+            print(f"Q-tablosu başarıyla kaydedildi: {dosya_yolu}")
+        except Exception as e:
+            print(f"Q-tablosu kaydedilirken hata oluştu: {e}")
 
     def q_degerini_al(self, durum, aksiyon):
         """
@@ -128,3 +167,16 @@ class QAjani:
         Mevcut epsilon değerini döner.
         """
         return self.epsilon
+    
+    def epsilon_ayarla(self, yeni_epsilon):
+        """
+        Epsilon değerini belirli bir değere ayarlar.
+        
+        Args:
+            yeni_epsilon (float): Yeni epsilon değeri (0-1 arası)
+        """
+        if 0 <= yeni_epsilon <= 1:
+            self.epsilon = yeni_epsilon
+            print(f"Epsilon değeri {yeni_epsilon} olarak ayarlandı")
+        else:
+            print(f"Hata: Epsilon değeri 0-1 arasında olmalıdır. Verilen: {yeni_epsilon}")

@@ -15,10 +15,10 @@ class BombaYonetici:
         self.bombalar = []
 
     def bombalari_olustur(self, robot, kebab):
-        nesneler = self.bombalar + [robot, kebab]
         sayac = 0
         while sayac < BOMBA_SAYISI:
             bomba = Bomba()
+            nesneler = self.bombalar + [robot, kebab]
             if not hucre_dolu_mu(bomba, nesneler):
                 self.bombalar.append(bomba)
                 sayac += 1

@@ -3,20 +3,34 @@ from ayarlar import *
 from bomba import BombaYonetici
 from robot import Robot
 from kebab import Kebab
+from utils import yol_bulunabilir_mi
 
 def yerlestir():
-    robot = Robot()
-    kebab = Kebab()
-    while True:
-        if (robot.x, robot.y) == (kebab.x, kebab.y):
-            kebab = Kebab()
-        else:
-            break
+    max_deneme = 10  # Sonsuz döngüyü önlemek için maksimum deneme sayısı
+    deneme = 0
     
-    bomba_yonetici = BombaYonetici()
-    bomba_yonetici.bombalari_olustur(robot, kebab)
+    while deneme < max_deneme:
+        robot = Robot()
+        kebab = Kebab()
+        
+        # Robot ve kebab aynı yerde olmasın
+        while (robot.x, robot.y) == (kebab.x, kebab.y):
+            kebab = Kebab()
+        
+        bomba_yonetici = BombaYonetici()
+        bomba_yonetici.bombalari_olustur(robot, kebab)
+        
+        # Bomba pozisyonlarını al
+        bomba_pozisyonlari = [(bomba.x, bomba.y) for bomba in bomba_yonetici.bombalar]
+        
+        # Robotun kebaba ulaşabilir olup olmadığını kontrol et
+        if yol_bulunabilir_mi((robot.x, robot.y), (kebab.x, kebab.y), bomba_pozisyonlari):
+            return robot, kebab, bomba_yonetici
+        
+        deneme += 1
+    
+    raise Exception("Yeterli deneme sonrası robot kebaba ulaşamıyor. Lütfen ayarları kontrol edin.")
 
-    return robot, kebab, bomba_yonetici
 
 
 class OyunAlani:

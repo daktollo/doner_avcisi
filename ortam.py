@@ -90,6 +90,17 @@ class OyunAlani:
         if self.robot.x == self.kebab.x and self.robot.y == self.kebab.y:
             return True
         return False
+    
+    def _duvar_carpma(self):
+        if self.robot.x < 0 or self.robot.x >= EKRAN_GENISLIGI or self.robot.y < 0 or self.robot.y >= EKRAN_YUKSEKLIGI:
+            return True
+        return False
+    
+    def zaman_cezasi(self):
+        """
+        Zaman cezası olarak her adımda ZAMAN_CEZA ödül verilir.
+        """
+        return ZAMAN_CEZA
 
 
     
@@ -99,7 +110,11 @@ class OyunAlani:
             odul += BOMBA_CEZA
         if self._odul_carpma():
             odul += KEBAB_ODUL
-        
+        if self._duvar_carpma():
+            odul += BOMBA_CEZA
+
+        odul += self.zaman_cezasi()
+
         return odul
     
     def _robot_hareket_ettir(self, aksiyon):

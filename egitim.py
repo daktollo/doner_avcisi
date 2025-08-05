@@ -10,7 +10,7 @@ writer = SummaryWriter()
 
 ui = True
 eps = 10000
-max_adim = 20
+max_adim = 25
 
 if ui:
     pygame.init()

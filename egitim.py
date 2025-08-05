@@ -41,6 +41,8 @@ for i in range(eps):
         obs = yeni_durum
 
     writer.add_scalar("odul", toplam_odul, i)
+    avg_odul = toplam_odul / (i + 1)
+    writer.add_scalar("ortalama_odul", avg_odul, i)
 
     if i % 30 == 0:
         q_ajani.kayit()

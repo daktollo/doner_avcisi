@@ -21,10 +21,17 @@ for i in range(eps):
     obs = env.reset()
     toplam_odul = 0
     for j in range(max_adim):
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                q_ajani.kayit()
+                pygame.quit()
+                exit()
         if ui:
             env.render()
 
         aksiyon = q_ajani.aksiyon_sec(obs)
+        print(f"Aksiyon: {aksiyon}")
         yeni_durum, alinan_odul, oyun_bitti = env.adim(aksiyon)
         toplam_odul += alinan_odul
 
@@ -37,8 +44,3 @@ for i in range(eps):
 
     if i % 30 == 0:
         q_ajani.kayit()
-
-
-
-
-q_ajani.kayit()

@@ -1,4 +1,5 @@
 import pickle
+import numpy as np
 
 def one_hot_encode(action):
     """
@@ -42,21 +43,14 @@ class QAjani:
         """
         Duruma göre en iyi aksiyonu seçer.
         """
-        max_aksiyon = None
-        max_odul = None
-        for i in range(4):
-            aksiyon = [0, 0, 0, 0]
-            aksiyon[i] = 1  # i. ak siyonu seç
-            odul = self.q_degerini_al(durum, aksiyon)  # yukari
-            if max_aksiyon is None:
-                max_aksiyon = aksiyon
-                max_odul = odul
+        odul_degerleri = [self.q_table.get((tuple(durum), tuple(one_hot_encode(a))), 0) for a in range(4)]
 
-            elif odul > max_odul:
-                max_aksiyon = aksiyon
-                max_odul = odul
-
-        return max_aksiyon
+        if all(value == 0 for value in odul_degerleri):
+            # Eğer tüm Q-değerleri 0 ise rastgele aksiyon seç
+            return one_hot_encode(np.random.choice(range(4)))
+        
+        max_aksiyon = np.argmax(odul_degerleri)
+        return one_hot_encode(max_aksiyon)
     
     def kayit(self):
         with open("son_tablo.pkl", "wb") as dosya:

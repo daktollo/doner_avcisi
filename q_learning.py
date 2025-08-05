@@ -1,8 +1,18 @@
 import pickle
 
+def one_hot_encode(action):
+    """
+    Aksiyonları one-hot encoding formatına dönüştürür.
+    """
+    encoded = [0] * 4  # 4 aksiyon için
+    encoded[action] = 1
+    return encoded
+
 class QAjani:
-    def __init__(self):
+    def __init__(self,alfa=0.1, discount_factor=0.9): 
         self.q_table = {}
+        self.alfa = alfa
+        self.discount_factor = discount_factor
 
     def q_degerini_al(self, durum, aksiyon):
         """
@@ -18,7 +28,11 @@ class QAjani:
         """
         durum = tuple(durum) # [0, 0, 0, 0, 0, 0, 0, 0] -> (0, 0, 0, 0, 0, 0, 0, 0) d
         aksiyon = tuple(aksiyon) # [0, 0, 0, 0] -> (0, 0, 0, 0) a
-        self.q_table[(durum, aksiyon)] = alinan_odul # (d,a) : p
+
+        mevcut_q = self.q_table.get((durum, aksiyon), 0)
+        max_q_yeni = max(self.q_table.get((yeni_durum, one_hot_encode(a)), 0) for a in range(4))
+        yeni_q = mevcut_q + self.alfa * (alinan_odul + self.discount_factor * max_q_yeni - mevcut_q)
+        self.q_table[(durum, aksiyon)] = yeni_q
 
 
     def aksiyon_sec(self, durum):

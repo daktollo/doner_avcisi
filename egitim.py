@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
 
 ui = True
-eps = 1000
+eps = 10000
 max_adim = 20
 
 if ui:

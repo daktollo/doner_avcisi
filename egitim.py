@@ -28,7 +28,7 @@ for i in range(eps):
         yeni_durum, alinan_odul, oyun_bitti = env.adim(aksiyon)
         toplam_odul += alinan_odul
 
-        q_ajani.guncelle_q_degeri(obs, aksiyon, alinan_odul)
+        q_ajani.guncelle_q_degeri(obs, aksiyon, alinan_odul, yeni_durum)
         if oyun_bitti:
             break
         obs = yeni_durum

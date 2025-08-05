@@ -23,14 +23,17 @@ class QAjani:
         aksiyon = tuple(aksiyon)
         return self.q_table.get((durum, aksiyon), 0)
 
-    def guncelle_q_degeri(self, durum, aksiyon, alinan_odul, yeni_durum=None):
+    def guncelle_q_degeri(self, durum, aksiyon, alinan_odul, yeni_durum):
         """        Q-değerini günceller.
         """
         durum = tuple(durum) # [0, 0, 0, 0, 0, 0, 0, 0] -> (0, 0, 0, 0, 0, 0, 0, 0) d
         aksiyon = tuple(aksiyon) # [0, 0, 0, 0] -> (0, 0, 0, 0) a
 
         mevcut_q = self.q_table.get((durum, aksiyon), 0)
-        max_q_yeni = max(self.q_table.get((yeni_durum, one_hot_encode(a)), 0) for a in range(4))
+
+        yeni_durum = tuple(yeni_durum)  # yeni_durum'u da tuple'a çevir
+        max_q_yeni = max(self.q_table.get((yeni_durum, tuple(one_hot_encode(a))), 0) for a in range(4))
+        
         yeni_q = mevcut_q + self.alfa * (alinan_odul + self.discount_factor * max_q_yeni - mevcut_q)
         self.q_table[(durum, aksiyon)] = yeni_q
 

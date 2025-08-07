@@ -1,5 +1,6 @@
 import pickle
 import numpy as np
+import random
 
 def one_hot_encode(action):
     """
@@ -10,10 +11,13 @@ def one_hot_encode(action):
     return encoded
 
 class QAjani:
-    def __init__(self,alfa=0.1, discount_factor=0.9): 
+    def __init__(self,alfa=0.2, discount_factor=0.85, epsilon=1.0, epsilon_min=0.05, epsilon_decay=0.995): 
         self.q_table = {}
         self.alfa = alfa
         self.discount_factor = discount_factor
+        self.epsilon = epsilon  # Keşif oranı
+        self.epsilon_min = epsilon_min  # Minimum epsilon değeri
+        self.epsilon_decay = epsilon_decay  # Epsilon azalma oranı
 
     def q_degerini_al(self, durum, aksiyon):
         """
@@ -41,16 +45,23 @@ class QAjani:
 
     def aksiyon_sec(self, durum):
         """
-        Duruma göre en iyi aksiyonu seçer.
+        Duruma göre epsilon-greedy stratejisi ile aksiyon seçer.
         """
-        odul_degerleri = [self.q_table.get((tuple(durum), tuple(one_hot_encode(a))), 0) for a in range(4)]
-
-        if all(value == 0 for value in odul_degerleri):
-            # Eğer tüm Q-değerleri 0 ise rastgele aksiyon seç
+        # Epsilon-greedy: rastgele sayı epsilon'dan küçükse keşif yap
+        if random.uniform(0, 1) < self.epsilon:
+            # Keşif: rastgele aksiyon seç
             return one_hot_encode(np.random.choice(range(4)))
-        
-        max_aksiyon = np.argmax(odul_degerleri)
-        return one_hot_encode(max_aksiyon)
+        else:
+            # Sömürü: en iyi aksiyonu seç
+            odul_degerleri = [self.q_table.get((tuple(durum), tuple(one_hot_encode(a))), 0) for a in range(4)]
+            max_aksiyon = np.argmax(odul_degerleri)
+            return one_hot_encode(max_aksiyon)
+    
+    def epsilon_guncelle(self):
+        """
+        Epsilon değerini günceller (azaltır).
+        """
+        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
     
     def kayit(self):
         with open("son_tablo.pkl", "wb") as dosya:

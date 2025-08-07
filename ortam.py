@@ -69,6 +69,20 @@ class OyunAlani:
             obs[7] = 1
 
         return obs
+    
+    def _duvar_konumu(self, obs):
+        """ Duvar konumunu obs dizisine ekler.
+        """
+        if self.robot.x == 0: # duvar solumda
+            obs[3] = -1
+        if self.robot.x == (HUCRE_SAYISI - 1) * HUCRE_GENISLIGI: # duvar sagimda
+            obs[2] = -1
+        if self.robot.y == 0: # duvar yukarida
+            obs[0] = -1
+        if self.robot.y == (HUCRE_SAYISI - 1) * HUCRE_GENISLIGI: # duvar asagida
+            obs[1] = -1
+        return obs
+
 
 
     def get_obs(self):
@@ -76,6 +90,7 @@ class OyunAlani:
 
         obs = self._tehlike_konumu(obs)
         obs = self._odul_konumu(obs)
+        obs = self._duvar_konumu(obs)
 
         return obs
     
@@ -111,7 +126,7 @@ class OyunAlani:
         if self._odul_carpma():
             odul += KEBAB_ODUL
         if self._duvar_carpma():
-            odul += BOMBA_CEZA
+            odul += DUVAR_CEZA
 
         odul += self.zaman_cezasi()
 

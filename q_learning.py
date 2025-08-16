@@ -54,6 +54,9 @@ class QAjani:
         else:
             # Sömürü: en iyi aksiyonu seç
             odul_degerleri = [self.q_table.get((tuple(durum), tuple(one_hot_encode(a))), 0) for a in range(4)]
+            if all(deger == 0 for deger in odul_degerleri):
+                # Eğer tüm Q-değerleri sıfırsa rastgele aksiyon seç
+                return one_hot_encode(np.random.choice(range(4)))
             max_aksiyon = np.argmax(odul_degerleri)
             return one_hot_encode(max_aksiyon)
     
@@ -62,7 +65,7 @@ class QAjani:
         Epsilon değerini günceller (azaltır).
         """
         self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
-    
+        
     def kayit(self):
         with open("son_tablo.pkl", "wb") as dosya:
             pickle.dump(self.q_table, dosya)

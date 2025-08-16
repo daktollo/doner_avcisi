@@ -19,7 +19,7 @@ env = OyunAlani(ui)
 q_ajani = QAjani()
 toplam_oduller = []
 
-for i in range(eps):
+for eps_n in range(eps):
     obs = env.reset()
     toplam_odul = 0
     for j in range(max_adim):
@@ -42,15 +42,15 @@ for i in range(eps):
             break
         obs = yeni_durum
 
-    writer.add_scalar("odul", toplam_odul, i)
+    writer.add_scalar("odul", toplam_odul, eps_n)
     toplam_oduller.append(toplam_odul)
-    writer.add_scalar("eps_sonu_ortalama_odul", sum(toplam_oduller[:])/len(toplam_oduller), i)
-    writer.add_scalar("epsilon", q_ajani.epsilon, i)  # Epsilon değerini de logla
-    
+    writer.add_scalar("eps_sonu_ortalama_odul", sum(toplam_oduller[:])/len(toplam_oduller), eps_n)
+    writer.add_scalar("epsilon", q_ajani.epsilon, eps_n)  # Epsilon değerini de logla
+
     # Epsilon değerini güncelle
     q_ajani.epsilon_guncelle()
 
-    if i % 100 == 0:
+    if eps_n % 100 == 0:
         avg_odul = sum(toplam_oduller[-100:]) / 100
-        writer.add_scalar("ortalama_odul", avg_odul, i)  # Son 100 oyunun ortalama ödülünü logla
+        writer.add_scalar("ortalama_odul", avg_odul, eps_n)  # Son 100 oyunun ortalama ödülünü logla
         q_ajani.kayit()

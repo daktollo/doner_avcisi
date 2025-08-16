@@ -67,10 +67,10 @@ class QAjani:
         with open("son_tablo.pkl", "wb") as dosya:
             pickle.dump(self.q_table, dosya)
 
-    def okuma():
+    def okuma(self):
         with open("son_tablo.pkl", "rb") as dosya:
             q_table = pickle.load(dosya)
-        
+        self.q_table = q_table
         return q_table
         
 
